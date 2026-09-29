@@ -146,6 +146,12 @@ impl PathSelector for BiasedRttPathSelector {
         trace!("dumping path RTTs");
         for psd in ctx.paths() {
             let network_path = psd.network_path();
+
+            // Skip fallback
+            if network_path.is_relay() {
+                continue;
+            };
+
             // Skip paths whose stats can't be read (e.g. closed concurrently with select).
             let Some(stats) = psd.stats() else {
                 continue;
